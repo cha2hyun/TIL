@@ -11,7 +11,9 @@
 #                 count +=1
 #     answer += [0] # 마지막 요소는 비교할 것도 없이 그냥 내려가고 그런게 없으니 0을 더해줌.
 #     return answer
+ㄴ
 
+# 스택으로 
 def solution1(prices):
     answer = [0 for _ in range(len(prices))]
     stack = []

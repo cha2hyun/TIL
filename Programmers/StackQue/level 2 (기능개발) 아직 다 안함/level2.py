@@ -7,7 +7,7 @@ def solution(progresses, speeds):
         for j in range(i+1, len(left_days)+1):
             print(i, left_days[j], days)
 
-
+ 
 
     answer = []
     return answer

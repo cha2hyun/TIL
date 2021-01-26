@@ -97,6 +97,14 @@ def createFrame(folder_name, json_name):
     
     return frame
 
+def saveJson(folder_name, data):
+    PATH = "./output/" + folder_name    
+    if not(os.path.exists(PATH)):        
+        os.mkdir(PATH)
+    with open(PATH + "/" + folder_name + '.json', 'w', encoding="utf-8") as make_file:
+        json.dump(data, make_file, ensure_ascii=False, indent="\t")
+    print("saved :",folder_name)
+
 def createJson(folder_name, json_names):
     video_name = folder_name
     direction = folder_name.split("_")[1][1:-1].lower()
@@ -182,17 +190,8 @@ def createJson(folder_name, json_names):
     data["frames"] = frames
     saveJson(folder_name, data)
 
-def saveJson(folder_name, data):
-    PATH = "./output/" + folder_name    
-    if not(os.path.exists(PATH)):        
-        os.mkdir(PATH)
-    with open(PATH + "/" + folder_name + '.json', 'w', encoding="utf-8") as make_file:
-        json.dump(data, make_file, ensure_ascii=False, indent="\t")
-    print("saved :",folder_name)
-
 input_path = "./input/"
 fake_csv = createFakeCsv()
 fake_db = createFakeDB()
-# createAction("[10]_[Front]_[Screen01]_[Ama01]", 200)
 for folder_name, json_names in fake_db:
     createJson(folder_name, json_names)

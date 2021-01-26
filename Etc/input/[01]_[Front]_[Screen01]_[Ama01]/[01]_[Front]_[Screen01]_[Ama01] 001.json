@@ -1,0 +1,41 @@
+{
+    "images":
+    [
+        {
+            "filename":"[01]_[Front]_[Screen01]_[Ama01] 001.jpg","width":1080,"height":1920
+        }
+    ],
+    "annotations":
+    [
+        {
+            "attributes":[],"class":"keypoint_club","points":[475,915,1,373,1636,2,436,1597,2]
+        },
+        {
+            "box":[268,473,334,913],"attributes":[],"class":"0"
+        },
+        {
+            "box":[417,473,135,175],"attributes":[],"class":"1"
+        },
+        {
+            "box":[329,1591,125,108],"attributes":[],"class":"6"
+        },
+        {
+            "box":[460,1568,47,46],"attributes":[],"class":"5"
+        },
+        {
+            "box":[437,949,40,72],"attributes":[],"class":"2"
+        },
+        {
+            "box":[463,928,47,87],"attributes":[],"class":"2"
+        },
+        {
+            "box":[268,1309,87,74],"attributes":[],"class":"3"
+        },
+        {
+            "box":[523,1318,68,71],"attributes":[],"class":"3"
+        },
+        {
+            "attributes":[],"class":"0","points":[480,605,2,464,577,2,512,578,2]
+        }
+    ]
+}

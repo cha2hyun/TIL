@@ -2,61 +2,79 @@ import os
 import json
 from collections import OrderedDict
 
-INPUT_DIR = "./input/"
+def getName(DIR):
+    names = os.listdir(DIR)
+    paths = [ (DIR + i) for i in names ] 
+    return names
 
-FOLDER_NAME = ""
-JSON_DIR = INPUT_DIR + FOLDER_NAME
+def makeFrmae(folder_name, json_name):
+    path = INPUT_DIR + folder_name + "/" + json_name
+    with open(path, 'r') as f:
+        json_data = json.load(f)
+    
+    images = json_data["images"][0]
+    frame_name = images["filename"]
+    width = images["width"]
+    height = images["height"]
 
-def getNamesAndPaths(dir):
-    names = os.listdir(dir)
-    paths = [ (dir + i) for i in names ] 
-    return names, paths
+    # 엑셀이 없어서 액션은 보류 하였음
+    action = ""
 
-folder_names, folder_paths = getNamesAndPaths(INPUT_DIR)
-json_names, json_paths = getNamesAndPaths(INPUT_DIR + folder_names[0])
-print(folder_names[0],"  |  ", folder_paths[0],"  |  ", json_names[0],"  |  ", json_paths[0])
+    bbox = []
+    keypoint_body = []
+    keypoint_club = []
+    for annotate in json_data["annotations"]:
+        # bbox
+        box_and_class = []
+        try:            
+            for box in annotate["box"]:
+                box_and_class.append(box)
+            box_and_class.append(int(annotate["class"]))
+            bbox.append(box_and_class)
+        except:
+            try:
+                #keypoint_club
+                if annotate["class"] == "keypoint_club":
+                    points = annotate["points"]
+                    temp = []
+                    for idx, point in enumerate(points):
+                        temp.append(point)
+                        if (idx % 3 == 2) and (idx != 0):
+                            keypoint_club.append(temp)
+                            temp = []  
+                #keypoint_body
+                else:
+                    points = annotate["points"]
+                    temp = []
+                    for idx, point in enumerate(points):
+                        temp.append(point)
+                        if (idx % 3 == 2) and (idx != 0):
+                            keypoint_body.append(temp)
+                            temp = []  
+            except:
+                pass
 
+    frame = {
+        "frame_name" : frame_name,
+        "width" : width,
+        "height" : height,
+        "action" : action,
+        "bbox" : bbox,
+        "keypoint_body" : keypoint_body,
+        "keypoint_club" : keypoint_club
+    }
+    
+    return frame
 
-
-# 폴더 이름과 경로를 리턴
-def findFolder(current_path):
-    path = current_path + "/input/"
-    folder_names = os.listdir(path)
-    folder_paths = [ (path + i) for i in folder_names ] 
-    return folder_names, folder_paths
-
-# 폴더에 있는 json 이름과 경로를 리스트를 리턴
-def findJsonName(folder_path):
-    path = folder_path + "/"
-    json_names = os.listdir(path)
-    json_paths = [ (path + i) for i in json_names ] 
-    return json_names, json_paths
-
-# json 경로 리스트에 있는 json들을 하나로 병합
-def mergeJson(json_paths):
-    merged_json = {}
-    for path in json_paths:
-        with open(path, 'r') as f:
-            json_data = json.load(f)
-            # print(json_data)
-
-def createJson(folder_name, folder_path, json_names, json_paths):
+def createJson(folder_name, json_names):
     video_name = folder_name
     direction = folder_name.split("_")[1][1:-1].lower()
     golfer_type = folder_name.split("_")[3][1:-1][:3].lower() + "_level" + folder_name.split("_")[3][1:-1][3:]
-
-    # 엑셀파일이 아닌 pdf로 되어있어서 action을 불러올 수 없음 -> 보류
-    address = ""
-    toe_up = ""
-    mid_backswing = ""
-    top = ""
-    mid_downswing = ""
-    impact = ""
-    mid_follow_through = ""
-    finish = ""
-
-    frames_dict = {}
-    
+    frames = []
+    for json_name in json_names:
+        frame = makeFrmae(folder_name, json_name)
+        frames.append(frame)
+        
     data = OrderedDict()
     data["label-info"] =  {
         "video_info_format": {
@@ -120,39 +138,47 @@ def createJson(folder_name, folder_path, json_names, json_paths):
             "direction": direction,
             "golfer_type": golfer_type
         }
-    data["action"] = {
-            "address":address,
-            "toe-up":toe_up,
-            "mid_backswing":mid_backswing,
-            "top":top,
-            "mid_downswing":mid_downswing,
-            "impact":impact,
-            "mid_follow_through":mid_follow_through,
-            "finish":finish
-        }
-    data["frames"] = {
-        "frame_name" : "",
-        "width" : "",
-        "height" : "",
-        "action" : "",
-        "bbox" : "",
-        "keypoint_body" : "",
-        "keypoint_club" : ""
+    data["action"] = {         
+        "address": 10,
+        "toe-up": 20,
+        "mid_backswing": 30,
+        "top": 40,
+        "mid_downswing": 50,
+        "impact": 60,
+        "mid_follow_through": 70,
+        "finish": 80
     }
+    data["frames"] = frames
+    # print(json.dumps(data, ensure_ascii=False, indent='\t'))
+    saveJson(folder_name, data)
 
-    print(json.dumps(data, ensure_ascii=False, indent='\t'))
+def saveJson(folder_name, data):
+    DIR = OUTPUT_DIR + folder_name
+    if not(os.path.exists(DIR)):
+        print(DIR)
+        os.mkdir(DIR)
+    with open(DIR + "/" + folder_name + '.json', 'w', encoding="utf-8") as make_file:
+        json.dump(data, make_file, ensure_ascii=False, indent="\t")
+
     
 
-# current_path = os.getcwd()
+INPUT_DIR = "./input/"
+OUTPUT_DIR = "./output/"
 
-# folder_names, folder_paths = findFolder(current_path)
-# folder_name = folder_names[0]
-# folder_path = folder_paths[0]
+# fake_db = [폴더이름, [폴더에 있는 json 리스트]]
+fake_db = []
+folder_names = getName(INPUT_DIR)
+for folder_name in folder_names:
+    json_names = getName(INPUT_DIR + folder_name)
+    fake_db.append([folder_name, json_names])
+    
+# for db in fake_db:
+#     print(db[0])
+#     for data in db[1]:
+#         print(data)
 
-# json_names, json_paths = findJsonName(folder_path)
+f_name = fake_db[0][0]
+j_name = fake_db[0][1]
+createJson(f_name, j_name)
 
-# createJson(folder_name, folder_path, json_names, json_paths)
-# print(json_names[0], json_paths[0])
 
-# merged_json = mergeJson(json_paths)
-# return_json = makeJson(folder_path, mergeJson)

@@ -1,16 +1,44 @@
 import os
 import json
+import csv
 from collections import OrderedDict
+import pandas as pd 
 
-def createFakeDB(folder_names):
+
+
+def createFakeDB():
     fake_db = []
+    folder_names = os.listdir(input_path)
     for folder_name in folder_names:
-        json_names = os.listdir(INPUT_PATH + folder_name)
+        json_names = os.listdir(input_path + folder_name)
         fake_db.append([folder_name, json_names])
     return fake_db
 
+def createFakeCsv():
+    file_path = "./SKT_골프_동작정의문서"
+    xlsx = pd.read_excel(file_path + ".xlsx", sheet_name = "Sheet1")
+    xlsx.to_csv(file_path + ".csv")
+    with open(file_path + ".csv", 'r') as f:
+        reader = csv.reader(f)
+        fake_csv = list(reader)
+    return fake_csv
+
+def createAction(folder_name, img_num):
+    action_score = [10,20,30,40,50,60,70,80]
+    for csv_data in fake_csv:
+        if csv_data[1] == folder_name:
+            scores = csv_data[2:]
+            action_idx = 0
+            for idx, score in enumerate(scores):
+                if score == "":
+                    score = 0
+                if float(img_num) > float(score) and score != 0:
+                    action_idx = idx
+                if (float(img_num) < float(score)) and score != 0:
+                    return action_score[action_idx]
+            
 def createFrame(folder_name, json_name):
-    path = INPUT_PATH + folder_name + "/" + json_name
+    path = input_path + folder_name + "/" + json_name
     with open(path, 'r') as f:
         json_data = json.load(f)
     
@@ -20,7 +48,8 @@ def createFrame(folder_name, json_name):
     height = images["height"]
 
     # 엑셀이 없어서 액션은 보류 하였음
-    action = ""
+    img_num = frame_name[-7:-4]
+    action = createAction(folder_name, img_num)
 
     bbox = []
     keypoint_body = []
@@ -161,9 +190,9 @@ def saveJson(folder_name, data):
         json.dump(data, make_file, ensure_ascii=False, indent="\t")
     print("saved :",folder_name)
 
-INPUT_PATH = "./input/"
-folder_names = os.listdir(INPUT_PATH)
-fake_db = createFakeDB(folder_names)
+input_path = "./input/"
+fake_csv = createFakeCsv()
+fake_db = createFakeDB()
+# createAction("[10]_[Front]_[Screen01]_[Ama01]", 200)
 for folder_name, json_names in fake_db:
     createJson(folder_name, json_names)
-

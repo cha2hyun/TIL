@@ -4,8 +4,6 @@ import csv
 from collections import OrderedDict
 import pandas as pd 
 
-
-
 def createFakeDB():
     fake_db = []
     folder_names = os.listdir(input_path)
@@ -36,6 +34,7 @@ def createAction(folder_name, img_num):
                     action_idx = idx
                 if (float(img_num) < float(score)) and score != 0:
                     return action_score[action_idx]
+            return action_score[action_idx]
             
 def createFrame(folder_name, json_name):
     path = input_path + folder_name + "/" + json_name
@@ -47,7 +46,6 @@ def createFrame(folder_name, json_name):
     width = images["width"]
     height = images["height"]
 
-    # 엑셀이 없어서 액션은 보류 하였음
     img_num = frame_name[-7:-4]
     action = createAction(folder_name, img_num)
 
@@ -98,10 +96,10 @@ def createFrame(folder_name, json_name):
     return frame
 
 def saveJson(folder_name, data):
-    PATH = "./output/" + folder_name    
+    PATH = "./output/"
     if not(os.path.exists(PATH)):        
         os.mkdir(PATH)
-    with open(PATH + "/" + folder_name + '.json', 'w', encoding="utf-8") as make_file:
+    with open(PATH + folder_name + '.json', 'w', encoding="utf-8") as make_file:
         json.dump(data, make_file, ensure_ascii=False, indent="\t")
     print("saved :",folder_name)
 

@@ -2,13 +2,15 @@ import os
 import json
 from collections import OrderedDict
 
-def getName(DIR):
-    names = os.listdir(DIR)
-    paths = [ (DIR + i) for i in names ] 
-    return names
+def createFakeDB(folder_names):
+    fake_db = []
+    for folder_name in folder_names:
+        json_names = os.listdir(INPUT_PATH + folder_name)
+        fake_db.append([folder_name, json_names])
+    return fake_db
 
-def makeFrmae(folder_name, json_name):
-    path = INPUT_DIR + folder_name + "/" + json_name
+def createFrame(folder_name, json_name):
+    path = INPUT_PATH + folder_name + "/" + json_name
     with open(path, 'r') as f:
         json_data = json.load(f)
     
@@ -72,7 +74,7 @@ def createJson(folder_name, json_names):
     golfer_type = folder_name.split("_")[3][1:-1][:3].lower() + "_level" + folder_name.split("_")[3][1:-1][3:]
     frames = []
     for json_name in json_names:
-        frame = makeFrmae(folder_name, json_name)
+        frame = createFrame(folder_name, json_name)
         frames.append(frame)
         
     data = OrderedDict()
@@ -149,36 +151,19 @@ def createJson(folder_name, json_names):
         "finish": 80
     }
     data["frames"] = frames
-    # print(json.dumps(data, ensure_ascii=False, indent='\t'))
     saveJson(folder_name, data)
 
 def saveJson(folder_name, data):
-    DIR = OUTPUT_DIR + folder_name
-    if not(os.path.exists(DIR)):
-        print(DIR)
-        os.mkdir(DIR)
-    with open(DIR + "/" + folder_name + '.json', 'w', encoding="utf-8") as make_file:
+    PATH = "./output/" + folder_name    
+    if not(os.path.exists(PATH)):        
+        os.mkdir(PATH)
+    with open(PATH + "/" + folder_name + '.json', 'w', encoding="utf-8") as make_file:
         json.dump(data, make_file, ensure_ascii=False, indent="\t")
+    print("saved :",folder_name)
 
-    
-
-INPUT_DIR = "./input/"
-OUTPUT_DIR = "./output/"
-
-# fake_db = [폴더이름, [폴더에 있는 json 리스트]]
-fake_db = []
-folder_names = getName(INPUT_DIR)
-for folder_name in folder_names:
-    json_names = getName(INPUT_DIR + folder_name)
-    fake_db.append([folder_name, json_names])
-    
-# for db in fake_db:
-#     print(db[0])
-#     for data in db[1]:
-#         print(data)
-
-f_name = fake_db[0][0]
-j_name = fake_db[0][1]
-createJson(f_name, j_name)
-
+INPUT_PATH = "./input/"
+folder_names = os.listdir(INPUT_PATH)
+fake_db = createFakeDB(folder_names)
+for folder_name, json_names in fake_db:
+    createJson(folder_name, json_names)
 

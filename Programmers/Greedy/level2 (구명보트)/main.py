@@ -1,44 +1,55 @@
-def solution(name):
-    make_name = [min(ord(i) - ord("A"), ord("Z") - ord(i)+1) for i in name]
-    print(make_name)
-    idx, answer = 0, 0
-    while True:
-        answer += make_name[idx]
-        make_name[idx] = 0
-        print(make_name)
-        if sum(make_name) == 0:
-            break
-        left, right = 1, 1
-        while make_name[idx - left] == 0:
-            left +=1
-        while make_name[idx + right] == 0:
-            right +=1
-        answer += left if left < right else right
-        idx += -left if left < right else right
+def solution(people, limit):
+    answer = len(people)
+    peple = sorted(people,reverse = True)
+    start, end = 0, len(peple)-1
+    while start < end : 
+        if peple[start] + peple[end] <= limit :
+            end -= 1
+            answer -= 1
+        start += 1
     return answer
 
-# def solution(name):
-#     alphabet = [ord(alphabet) for alphabet in name]
-#     up = [0] * len(alphabet)
-#     down = [0] * len(alphabet)
-#     left = [0] * len(alphabet)
-#     right = [0] * len(alphabet)
-#     print(alphabet)
-    
-#     # A: 65 / Z:90
-#     #abcdefghijkl mn opqrstuvwxyz 26개 
-#     for idx, char in enumerate(alphabet):
-#         if char < 78:
-#             up[idx] = (char - 65)
-#         else:   
-#             down[idx] = (91 - char) 
+
+# def solution(people, limit):
+#     answer = 0
+#     poo = sorted(people)
+#     while poo:
+#         if len(poo) == 1:
+#             answer += 1
+#             break
+#         if poo[0] + poo[-1] > limit:
+#             poo.pop()
+#             answer += 1
+#         else:
+#             poo.pop(0)
+#             poo.pop()
+#             answer += 1
+#     return answer
+
+
+# def solution(people, limit):
+#     people.sort()
+#     boat = []
+#     print(people)
+#     print()
+#     for i in range(0, len(people)):
+#         print(i,"번쨰", people[i], "랑 비교")
+#         if people[i] + people[i+1] > 100:
+#             boat.append([people[i]])                 
+#             people[i] = 0
         
-    
-#     print("up", up)
-#     print("down", down)
-#     print("left", left)
-#     print("right", right)
+#         for j in range(i + 1, len(people)):
+#             if people[i] + people[j] > 100 :
+#                 boat.append([people[i], people[j-1]])
+#                 people[i] = 0
+#                 people[j-1] = 0 
+#                 print(people)
+#                 print(boat)
+#                 break
+#             # print(people[j])
+#         print("")
+#     print(boat)
 #     answer = 0
 #     return answer
 
-print(solution("JAZ"))
+print(solution([70, 50, 80, 50], 100))

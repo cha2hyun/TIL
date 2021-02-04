@@ -1,6 +1,8 @@
 import requests, json
  
 ARTICLE_LIST_MAIN_PATH = 'https://apis.naver.com/cafe-web/cafe2/ArticleList.json'
+CLUB_ID = 24485008
+MENU_ID = 64
 
 def getArticleList(CAFE_UNIQUE_ID, REQUEST_LIST_PAGE_NUM, REQUEST_LIST_SCOPE, MODULE_REQUEST_SESSION):
     # 페지네이션 20개씩 불러옴
@@ -32,7 +34,7 @@ def saveToJson(contetnt, folderName, fileName):
 
 def main():
     MainSession = requests.Session()
-    response = getArticleList(24485008, 3, 64, MainSession)
+    response = getArticleList(CLUB_ID, 3, MENU_ID, MainSession)
     ArticleList = response['message']['result']['articleList']
     saveToJson(ArticleList, "test", "ArticleList")
     ArticleBody = getArticleBody("24485008", "749191", MainSession)

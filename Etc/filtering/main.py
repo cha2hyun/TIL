@@ -36,7 +36,7 @@ def getCleanText(original_text):
 # 필터링할 리스트 가져오기
 def getFilteringList():
     # 추후 파일로 관리
-    filtering_list = ["로메인이", "피자"]
+    filtering_list = ["로메인이", "피자", "로하스"]
     return filtering_list
 
 # 필터링 걸리는 문자열 시작위치와 끝위치 가져오기
@@ -81,7 +81,7 @@ def printValidatedText(cleaned_text, validated_text_index):
         end = validated_text_index[cursor][1]
         if start <= idx and idx <= end + 1:
             cprint(text, "red", end="")
-            if idx == end and cursor < len(validated_text_index) - 1:
+            if idx == end and cursor < len(validated_text_index):
                 cursor += 1
         else:
             cprint(text, "white", end="")

@@ -1,6 +1,5 @@
 import sys
 import re
-from tqdm import tqdm
 from termcolor import colored, cprint
 from collections import deque
 
@@ -44,7 +43,7 @@ def getFilteringList():
 def getFilteredTextIndex(filtering_list, cleaned_text):
     filtered_text_index = []
     print("찾는 단어 :", filtering_list)
-    for filter_word in tqdm(filtering_list):
+    for filter_word in filtering_list:
         for idx, alphabet in enumerate(cleaned_text):
             if filter_word.startswith(alphabet):
                 start = idx

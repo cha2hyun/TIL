@@ -1,5 +1,6 @@
 import sys
 import re
+from tqdm import tqdm
 from termcolor import colored, cprint
 from collections import deque
 
@@ -43,7 +44,7 @@ def getFilteringList():
 def getFilteredTextIndex(filtering_list, cleaned_text):
     filtered_text_index = []
     print("찾는 단어 :", filtering_list)
-    for filter_word in filtering_list:
+    for filter_word in tqdm(filtering_list):
         for idx, alphabet in enumerate(cleaned_text):
             if filter_word.startswith(alphabet):
                 start = idx
@@ -81,7 +82,7 @@ def printValidatedText(cleaned_text, validated_text_index):
         end = validated_text_index[cursor][1]
         if start <= idx and idx <= end + 1:
             cprint(text, "red", end="")
-            if idx == end and cursor < len(validated_text_index):
+            if idx == end and cursor < len(validated_text_index) - 1: 
                 cursor += 1
         else:
             cprint(text, "white", end="")

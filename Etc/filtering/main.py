@@ -19,39 +19,46 @@ class bcolors:
         self.FAIL = ''
         self.ENDC = ''
 
-def getCleanText(original_text):
-    pattern = "[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]"
-    text = re.sub(pattern, '', original_text)
-    return text
 
+# 원본데이터 가져오기
 def getOriginalText():
     file_path = "./test.txt"
     with open(file_path, mode='rt', encoding='utf-8') as f:
         original_text = f.read()
     return original_text 
 
+# 특수문자 제거, 원본데이터의 특수문자는 고려하지 않음
+def getCleanText(original_text):
+    pattern = "[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]"
+    text = re.sub(pattern, '', original_text)
+    return text
+
+# 필터링할 리스트 가져오기
 def getFilteringList():
     # 추후 파일로 관리
     filtering_list = ["로메인이", "피자"]
     return filtering_list
 
+# 필터링 걸리는 문자열 시작위치와 끝위치 가져오기
 def getFilteredTextIndex(filtering_list, cleaned_text):
     filtered_text_index = []
+    print("찾는 단어 :", filtering_list)
     for filter_word in filtering_list:
-        print("찾는 단어 :", filter_word)
         for idx, alphabet in enumerate(cleaned_text):
             if filter_word.startswith(alphabet):
                 start = idx
+                # 최대값은 단어 사이마다 공백이 있는 경우기 때문에 end는 단어길이 * 2
                 end = idx + len(filter_word) + len(filter_word)
                 compare_text = cleaned_text[start:end]
                 space_removed_text = compare_text.replace(" ","")
                 if filter_word in space_removed_text:
                     end = start + compare_text.find(filter_word[-1])
-                    print("   찾음 => ", compare_text, "|", space_removed_text, "| start", start, "| end", end)
+                    # print("   찾음 => ", compare_text, "|", space_removed_text, "| start", start, "| end", end)
                     filtered_text_index.append([start, end])
                     
     return filtered_text_index
 
+# 필터링 걸 인덱스의 위치를 정렬, 중복은 합쳐버림
 def validateFilteredTextIndex(filtered_text_index):
     filtered_text_index.sort()
     dq = deque(filtered_text_index)
@@ -65,19 +72,19 @@ def validateFilteredTextIndex(filtered_text_index):
             pass
     return list(dq)
 
-def printWithColor(original_text, validated_text_index):
-    print(validated_text_index)
-    # cursor = 0
-    # for idx, t in enumerate(original_text):
-    #     start = validated_text_index[cursor][0]
-    #     end = validated_text_index[cursor][1]
-    #     if start <= idx and idx <= end:
-    #         cprint(t, 'red', end='')
-    #     else:
-    #         if idx == end:
-    #             cursor += 1
-    #         cprint(t, 'white', end='')
-    #     print(idx, t, cursor, start, end)
+# 출력
+def printValidatedText(cleaned_text, validated_text_index):
+    print("색칠할 인덱스 범위", validated_text_index)
+    cursor = 0
+    for idx, text in enumerate(cleaned_text):
+        start = validated_text_index[cursor][0]
+        end = validated_text_index[cursor][1]
+        if start <= idx and idx <= end + 1:
+            cprint(text, "red", end="")
+            if idx == end and cursor < len(validated_text_index) - 1:
+                cursor += 1
+        else:
+            cprint(text, "white", end="")
 
 def main():
     original_text = getOriginalText()
@@ -85,7 +92,7 @@ def main():
     filtering_list = getFilteringList()
     filtered_text_index = getFilteredTextIndex(filtering_list, cleaned_text)
     validated_text_index = validateFilteredTextIndex(filtered_text_index)
-    printWithColor(original_text, validated_text_index)
+    printValidatedText(cleaned_text, validated_text_index)
 
 if __name__ == "__main__":
     main()

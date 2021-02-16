@@ -85,6 +85,7 @@ def printValidatedText(cleaned_text, validated_text_index):
                 cursor += 1
         else:
             cprint(text, "white", end="")
+    print("")
 
 def main():
     original_text = getOriginalText()

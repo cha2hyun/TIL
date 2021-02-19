@@ -7,6 +7,8 @@ name = "pypi"
 xlrd = "*"
 openpyxl = "*"
 pandas = "*"
+termcolor = "*"
+tqdm = "*"
 
 [dev-packages]
 

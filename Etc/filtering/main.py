@@ -3,6 +3,7 @@ import re
 import os.path
 from termcolor import colored, cprint
 from collections import deque
+import colorama
 
 # 원본데이터 가져오기
 def get_original_text():
@@ -114,11 +115,11 @@ def print_with_color(original_text, filtering_range):
     print("")
 
 def main():
-    print("====원고검사기 by.정보과장====")
+    print("==== 원고검사기 ====")
     original_text = get_original_text()
     if original_text:
         filtering_range = get_filtering_range(get_filtering_list(), original_text)
-        print_or_not = input("\n4. 결과물을 출력하시겠습니까? (y/n)")
+        print_or_not = input("\n4. 결과물을 출력하시겠습니까? (y/n) :")
         if print_or_not == "y":
             print("\n")
             print_with_color(original_text, filtering_range)
@@ -127,3 +128,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    colorama.init()
+    input("종료하려면 아무 키를 눌러주세요 : ")

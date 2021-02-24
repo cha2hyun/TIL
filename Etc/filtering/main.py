@@ -101,30 +101,31 @@ def get_filtering_range(filtering_list, original_text):
 # 출력
 def print_with_color(original_text, filtering_range):
     # print("색칠할 인덱스 범위", filtering_range)
-    cursor = 0
-    for idx, alphabet in enumerate(original_text):
-        start = filtering_range[cursor][0]
-        end = filtering_range[cursor][1]
-        on_color = filtering_range[cursor][2]
-        if start <= idx and idx < end + 1:
-            cprint(alphabet, "grey", on_color, end="")
-            if idx == end and cursor < len(filtering_range) - 1: 
-                cursor += 1
-        else:
-            cprint(alphabet, "white", end="")
-    print("")
+    print_or_not = input("\n4. 결과물을 출력하시겠습니까? (y/n) :")
+    if print_or_not == "y":
+        print("\n")
+        cursor = 0
+        for idx, alphabet in enumerate(original_text):
+            start = filtering_range[cursor][0]
+            end = filtering_range[cursor][1]
+            on_color = filtering_range[cursor][2]
+            if start <= idx and idx < end + 1:
+                cprint(alphabet, "grey", on_color, end="")
+                if idx == end and cursor < len(filtering_range) - 1: 
+                    cursor += 1
+            else:
+                cprint(alphabet, "white", end="")
+        print("")
+    else:
+        pass
 
 def main():
     print("==== 원고검사기 ====")
     original_text = get_original_text()
     if original_text:
         filtering_range = get_filtering_range(get_filtering_list(), original_text)
-        print_or_not = input("\n4. 결과물을 출력하시겠습니까? (y/n) :")
-        if print_or_not == "y":
-            print("\n")
-            print_with_color(original_text, filtering_range)
-        else:
-            pass
+        print_with_color(original_text, filtering_range)
+        
 
 if __name__ == "__main__":
     main()

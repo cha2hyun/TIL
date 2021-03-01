@@ -17,13 +17,14 @@ def get_original_text():
         except:
             print("  > 원고를 불러오지 못했습니다. 원고를 다시 확인해주세요. 원고명은 영문이나 숫자를 추천합니다. ")
             return False
-        return original_text 
+        return original_text, file_name
     else:
         print("  > 종료합니다. 원고 이름을 확인해주세요. ")
         return False
+
         
 # 특수문자와 공백을 제거한다.
-def getCleanText(original_text):
+def getCleanSentence(original_text):
     pattern = "[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]"
     text = re.sub(pattern, '', original_text)
     text = text.replace(" ","").replace("\n", "")
@@ -74,7 +75,7 @@ def get_filtering_list():
     return filtering_list
 
 # 필터링 걸리는 문자열 위치와 문자 색상을 리스트로 받아온다
-def get_filtering_range(filtering_list, original_text):
+def get_filtering_range(original_text, filtering_list):
     print("\n3. 필터링 결과를 불러옵니다.")
     filtering_range = []
     filtering_result = []
@@ -83,19 +84,19 @@ def get_filtering_range(filtering_list, original_text):
         for cursor, alphabet in enumerate(original_text):
             if filter_word.startswith(alphabet):
                 start = cursor
-                end = cursor + len(filter_word) + len(filter_word)            
-                cleaned_text = getCleanText(original_text[start:end])
-                if filter_word in cleaned_text:
-                    end = start + original_text[start:end].find(filter_word[-1])
+                end = cursor + (len(filter_word) * 2)
+                cleaned_sentence = getCleanSentence(original_text[start:end])
+                if filter_word in cleaned_sentence:                
+                    reversed_original_text = original_text[start:end][::-1]
+                    end = start + reversed_original_text.find(filter_word[-1]) -1                 
+                    # print("   찾음 => ", filter_word, "|", cleaned_sentence, "| start", start, "| end", end)
                     filtering_result.append(filter_word)
-                    # print("   찾음 => ", filter_word, "|", cleaned_text, "| start", start, "| end", end)
-                    filtering_range.append([start, end, color])
+                    filtering_range.append([start, end, color, filter_word])
     
     filtering_range.sort()
     filtering_result.sort()
-    for result in filtering_result:
+    for result in list(set(filtering_result)):
         print("  >", result, ":", filtering_result.count(result), "개")
-        filtering_result.remove(result)
     return filtering_range
 
 # 출력
@@ -119,15 +120,29 @@ def print_with_color(original_text, filtering_range):
     else:
         pass
 
+def save_with_marker(original_text, filtering_list, file_name):
+    save_or_not = input("\n5. 결과물을 저장하시겠습니까? (y/n) :")
+    if save_or_not == "y":
+        marked_text = original_text
+        for word, colored in filtering_list:
+            marked_text = marked_text.replace(word, "["+word+"]")
+
+        file_path = "./filtering/" + file_name + "_edited.txt"    
+        with open(file_path, mode='w', encoding='utf-8') as f:                    
+            for text in marked_text:
+                f.write(text) 
+        print(" > 저장에 성공하였습니다. 파일 위치 : ", file_path, "\n\n")
+    
 def main():
     print("==== 원고검사기 ====")
-    original_text = get_original_text()
+    original_text, file_name = get_original_text()
     if original_text:
-        filtering_range = get_filtering_range(get_filtering_list(), original_text)
+        filtering_list = get_filtering_list()
+        filtering_range = get_filtering_range(original_text, filtering_list)
         print_with_color(original_text, filtering_range)
-        
+        save_with_marker(original_text, filtering_list, file_name)
 
 if __name__ == "__main__":
-    main()
     colorama.init()
+    main()
     input("종료하려면 아무 키를 눌러주세요 : ")

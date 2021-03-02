@@ -10,6 +10,7 @@ pandas = "*"
 termcolor = "*"
 tqdm = "*"
 colorama = "*"
+collection = "*"
 
 [dev-packages]
 

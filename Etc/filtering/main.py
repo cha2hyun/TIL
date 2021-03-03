@@ -3,6 +3,7 @@ import re
 import os.path
 from termcolor import colored, cprint
 from collections import deque
+from konlpy.tag import Kkma        
 import colorama
 
 # 원본데이터 가져오기
@@ -151,8 +152,7 @@ def analysis(original_text):
     analysis_or_not = input("\n5. 결과물을 분석하시겠습니까? (y/n) :")
     analysis_text = ""
     if analysis_or_not == "y":
-        print(" > 분석중...")
-        from konlpy.tag import Kkma        
+        print(" > 분석중...")        
         kkma = Kkma()
         # kkma.morphs         #형태소 분석
         # kkma.nouns          #명사 분석

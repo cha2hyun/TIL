@@ -203,8 +203,9 @@ def main():
         filtering_range, filtering_result_text = get_filtering_range(original_text, filtering_list)
         # print(filtering_range, "\n", filtering_results)
         print_with_color(original_text, filtering_range)
-        analysis_data, analysis_text = analysis(original_text)
-        saveAsFile(original_text, filtering_list, file_name, filtering_result_text, analysis_text)
+        # analysis_data, analysis_text = analysis(original_text)
+        # saveAsFile(original_text, filtering_list, file_name, filtering_result_text, analysis_text)
+        saveAsFile(original_text, filtering_list, file_name, filtering_result_text, "단어반복검사 업데이트 준비중")
 
 if __name__ == "__main__":
     colorama.init()

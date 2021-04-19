@@ -11,6 +11,7 @@ termcolor = "*"
 tqdm = "*"
 colorama = "*"
 collection = "*"
+pyupbit = "*"
 
 [dev-packages]
 

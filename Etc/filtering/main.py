@@ -2,8 +2,8 @@ import sys
 import re
 import os.path
 from termcolor import colored, cprint
-from collections import deque
-from konlpy.tag import Kkma        
+# from collections import deque
+# from konlpy.tag import Kkma        
 import colorama
 
 # 원본데이터 가져오기

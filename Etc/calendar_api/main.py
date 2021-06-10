@@ -56,5 +56,5 @@ for month in months:
 
 
 # 합치기
-kimchi_holiday = holiday + weekdays
+kimchi_holiday = list(sorted(set(holiday + weekdays)))
 print(kimchi_holiday)

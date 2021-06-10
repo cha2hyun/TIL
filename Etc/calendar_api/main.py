@@ -53,5 +53,8 @@ for month in months:
             if (week[6] != 0):
                 weekdays.append(str(year) + "-" + s_month + "-" + s_saturday)
 
+
+
+# 합치기
 kimchi_holiday = holiday + weekdays
 print(kimchi_holiday)

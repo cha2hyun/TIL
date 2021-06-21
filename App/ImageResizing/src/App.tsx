@@ -1,202 +1,296 @@
-// Example of Image Picker in React Native
-// https://aboutreact.com/example-of-image-picker-in-react-native/
-
-// Import React
-import React, {useState} from 'react';
-// Import required components
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Platform,
-  PermissionsAndroid,
-} from 'react-native';
-
-// Import Image Picker
-// import ImagePicker from 'react-native-image-picker';
-import {
-  launchCamera,
-  launchImageLibrary
-} from 'react-native-image-picker';
-
-const App = () => {
-  const [filePath, setFilePath] = useState({});
-
-  const requestCameraPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: 'Camera Permission',
-            message: 'App needs camera permission',
-          },
-        );
-        // If CAMERA Permission is granted
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
-    } else return true;
-  };
-
-  const requestExternalWritePermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: 'External Storage Write Permission',
-            message: 'App needs write permission',
-          },
-        );
-        // If WRITE_EXTERNAL_STORAGE Permission is granted
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        alert('Write permission err', err);
-      }
-      return false;
-    } else return true;
-  };
-
-  const captureImage = async (type) => {
-    let options = {
-      mediaType: type,
-      maxWidth: 300,
-      maxHeight: 550,
-      quality: 1,
-      videoQuality: 'low',
-      durationLimit: 30, //Video max duration in seconds
-      saveToPhotos: true,
-    };
-    let isCameraPermitted = await requestCameraPermission();
-    let isStoragePermitted = await requestExternalWritePermission();
-    if (isCameraPermitted && isStoragePermitted) {
-      launchCamera(options, (response) => {
-        console.log('Response = ', response);
-
-        if (response.didCancel) {
-          alert('User cancelled camera picker');
-          return;
-        } else if (response.errorCode == 'camera_unavailable') {
-          alert('Camera not available on device');
-          return;
-        } else if (response.errorCode == 'permission') {
-          alert('Permission not satisfied');
-          return;
-        } else if (response.errorCode == 'others') {
-          alert(response.errorMessage);
-          return;
-        }
-        console.log('base64 -> ', response.base64);
-        console.log('uri -> ', response.uri);
-        console.log('width -> ', response.width);
-        console.log('height -> ', response.height);
-        console.log('fileSize -> ', response.fileSize);
-        console.log('type -> ', response.type);
-        console.log('fileName -> ', response.fileName);
-        setFilePath(response);
-      });
-    }
-  };
-
-  const chooseFile = (type) => {
-    let options = {
-      mediaType: type,
-      maxWidth: 300,
-      maxHeight: 550,
-      quality: 1,
-    };
-    launchImageLibrary(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        alert('User cancelled camera picker');
-        return;
-      } else if (response.errorCode == 'camera_unavailable') {
-        alert('Camera not available on device');
-        return;
-      } else if (response.errorCode == 'permission') {
-        alert('Permission not satisfied');
-        return;
-      } else if (response.errorCode == 'others') {
-        alert(response.errorMessage);
-        return;
-      }
-      console.log('base64 -> ', response.base64);
-      console.log('uri -> ', response.uri);
-      console.log('width -> ', response.width);
-      console.log('height -> ', response.height);
-      console.log('fileSize -> ', response.fileSize);
-      console.log('type -> ', response.type);
-      console.log('fileName -> ', response.fileName);
-      setFilePath(response);
-    });
-  };
-
-  return (
-    <SafeAreaView style={{flex: 1}}>
-      <Text style={styles.titleText}>
-        Resizing Image test
-      </Text>
-      <View style={styles.container}>
-        {/* <Image
-          source={{
-            uri: 'data:image/jpeg;base64,' + filePath.data,
-          }}
-          style={styles.imageStyle}
-        /> */}
-        <Image
-          source={{uri: filePath.uri}}
-          style={styles.imageStyle}
-        />
-        <Text style={styles.textStyle}>{filePath.uri}</Text>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.buttonStyle}
-          onPress={() => chooseFile('photo')}>
-          <Text style={styles.textStyle}>Choose Image</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-export default App;
+import React, { Component } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+// import Video from 'react-native-video';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  titleText: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  button: {
+    backgroundColor: 'blue',
+    marginBottom: 10,
+  },
+  text: {
+    color: 'white',
+    fontSize: 20,
     textAlign: 'center',
-    paddingVertical: 20,
-  },
-  textStyle: {
-    padding: 10,
-    color: 'black',
-    textAlign: 'center',
-  },
-  buttonStyle: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 5,
-    marginVertical: 10,
-    width: 250,
-  },
-  imageStyle: {
-    width: 200,
-    height: 200,
-    margin: 5,
   },
 });
+
+export default class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      image: null,
+      images: null,
+    };
+  }
+
+  pickSingleWithCamera(cropping, mediaType = 'photo') {
+    ImagePicker.openCamera({
+      cropping: cropping,
+      width: 500,
+      height: 500,
+      includeExif: true,
+      mediaType,
+    })
+      .then((image) => {
+        console.log('received image', image);
+        this.setState({
+          image: {
+            uri: image.path,
+            width: image.width,
+            height: image.height,
+            mime: image.mime,
+          },
+          images: null,
+        });
+      })
+      .catch((e) => alert(e));
+  }
+
+  pickSingleBase64(cropit) {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: cropit,
+      includeBase64: true,
+      includeExif: true,
+    })
+      .then((image) => {
+        console.log('received base64 image');
+        this.setState({
+          image: {
+            uri: `data:${image.mime};base64,` + image.data,
+            width: image.width,
+            height: image.height,
+          },
+          images: null,
+        });
+      })
+      .catch((e) => alert(e));
+  }
+
+  cleanupImages() {
+    ImagePicker.clean()
+      .then(() => {
+        console.log('removed tmp images from tmp directory');
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  }
+
+  cleanupSingleImage() {
+    let image =
+      this.state.image ||
+      (this.state.images && this.state.images.length
+        ? this.state.images[0]
+        : null);
+    console.log('will cleanup image', image);
+
+    ImagePicker.cleanSingle(image ? image.uri : null)
+      .then(() => {
+        console.log(`removed tmp image ${image.uri} from tmp directory`);
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  }
+
+  cropLast() {
+    if (!this.state.image) {
+      return Alert.alert(
+        'No image',
+        'Before open cropping only, please select image'
+      );
+    }
+
+    ImagePicker.openCropper({
+      path: this.state.image.uri,
+      width: 200,
+      height: 200,
+    })
+      .then((image) => {
+        console.log('received cropped image', image);
+        this.setState({
+          image: {
+            uri: image.path,
+            width: image.width,
+            height: image.height,
+            mime: image.mime,
+          },
+          images: null,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        Alert.alert(e.message ? e.message : e);
+      });
+  }
+
+  pickSingle(cropit, circular = false, mediaType) {
+    ImagePicker.openPicker({
+      width: 500,
+      height: 500,
+      cropping: cropit,
+      cropperCircleOverlay: circular,
+      sortOrder: 'none',
+      compressImageMaxWidth: 1000,
+      compressImageMaxHeight: 1000,
+      compressImageQuality: 1,
+      compressVideoPreset: 'MediumQuality',
+      includeExif: true,
+      cropperStatusBarColor: 'white',
+      cropperToolbarColor: 'white',
+      cropperActiveWidgetColor: 'white',
+      cropperToolbarWidgetColor: '#3498DB',
+    })
+      .then((image) => {
+        console.log('received image', image);
+        this.setState({
+          image: {
+            uri: image.path,
+            width: image.width,
+            height: image.height,
+            mime: image.mime,
+          },
+          images: null,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        Alert.alert(e.message ? e.message : e);
+      });
+  }
+
+  pickMultiple() {
+    ImagePicker.openPicker({
+      multiple: true,
+      waitAnimationEnd: false,
+      sortOrder: 'desc',
+      includeExif: true,
+      forceJpg: true,
+    })
+      .then((images) => {
+        this.setState({
+          image: null,
+          images: images.map((i) => {
+            console.log('received image', i);
+            return {
+              uri: i.path,
+              width: i.width,
+              height: i.height,
+              mime: i.mime,
+            };
+          }),
+        });
+      })
+      .catch((e) => alert(e));
+  }
+
+  scaledHeight(oldW, oldH, newW) {
+    return (oldH / oldW) * newW;
+  }
+
+  renderVideo(video) {
+    console.log('rendering video');
+    return (
+      <View style={{ height: 300, width: 300 }}>
+        <Video
+          source={{ uri: video.uri, type: video.mime }}
+          style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+          rate={1}
+          paused={false}
+          volume={1}
+          muted={false}
+          resizeMode={'cover'}
+          onError={(e) => console.log(e)}
+          onLoad={(load) => console.log(load)}
+          repeat={true}
+        />
+      </View>
+    );
+  }
+
+  renderImage(image) {
+    return (
+      <Image
+        style={{ width: 300, height: 300, resizeMode: 'contain' }}
+        source={image}
+      />
+    );
+  }
+
+  renderAsset(image) {
+    if (image.mime && image.mime.toLowerCase().indexOf('video/') !== -1) {
+      return this.renderVideo(image);
+    }
+
+    return this.renderImage(image);
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <ScrollView>
+          {this.state.image ? this.renderAsset(this.state.image) : null}
+          {this.state.images
+            ? this.state.images.map((i) => (
+                <View key={i.uri}>{this.renderAsset(i)}</View>
+              ))
+            : null}
+        </ScrollView>
+
+        <TouchableOpacity
+          onPress={() => this.pickSingle(false)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Select Single</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.cropLast()} style={styles.button}>
+          <Text style={styles.text}>Crop Last Selected Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.pickSingleBase64(false)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Select Single Returning Base64</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.pickSingle(true)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Select Single With Cropping</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.pickSingle(true, true)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Select Single With Circular Cropping</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={this.pickMultiple.bind(this)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Select Multiple</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={this.cleanupImages.bind(this)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Cleanup All Images</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={this.cleanupSingleImage.bind(this)}
+          style={styles.button}
+        >
+          <Text style={styles.text}>Cleanup Single Image</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}

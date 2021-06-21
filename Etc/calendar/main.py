@@ -21,7 +21,6 @@ def get_week_no():
     return (target - origin).days // 7 + 1
 
 print(get_week_no())
-
 today_1 = datetime.today().strftime('%Y-%m-%d')
 print(type(today_1))
 

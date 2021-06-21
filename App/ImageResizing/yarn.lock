@@ -5433,6 +5433,11 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-image-crop-picker@0.36.2:
+  version "0.36.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.36.2.tgz#fcb35c1a12d805bedbb6d94a87078e86a6c9b49f"
+  integrity sha512-cTauoEHHzx14ZHA7Pt65e7RVnbn1WRYQz2ufTZp9/05EtNDrdsXwNhgtXdWVFbOhYB8qgUFQjy2NelkBOHIH3g==
+
 react-native-image-picker@3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-3.6.0.tgz#7defd37c61d20650f2e89f30b4b637511aeb0140"

@@ -12,6 +12,8 @@ tqdm = "*"
 colorama = "*"
 collection = "*"
 pyupbit = "*"
+requests = "*"
+numpy = "*"
 
 [dev-packages]
 

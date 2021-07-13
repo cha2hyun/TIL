@@ -3,7 +3,7 @@ from datetime import datetime
 from tqdm import tqdm
 
 ARTICLE_LIST_MAIN_PATH = 'https://apis.naver.com/cafe-web/cafe2/ArticleList.json'
-CLUB_ID = 24485008              # 카페 고유번호
+CLUB_ID = XXXXXXX              # 카페 고유번호
 MENU_ID = 64                    # 카테고리 고유번호
 TOTAL_ARTICLE_COUNT = 20000     # 불러올 게시글 총 갯수 (최대 2만개)
 ARTICLE_LIST_COUNT = 20         # getArticleList 에서 한번에 받아 오는 param 수 (고정값이므로 수정 X)
@@ -43,7 +43,7 @@ def saveToCSV(content, folderName, fileName):
     PATH = BASE_URL + fileName + ".csv"
     with open(PATH, 'w', newline='', encoding='utf-8-sig') as csvFile:
         writer = csv.writer(csvFile)
-        writer.writerow(["목록", "게시글번호", "제목", "작성자", "작성일", "가격", "조회수", "판매여부", "롱고니", "버팔로", "인빗큐"])
+        writer.writerow(["row", "row", "row", "row", "row", "row", "row", "row", "row", "row", "row"])
         for row in content:
             writer.writerow(row)
 
@@ -105,7 +105,7 @@ def validateAndSaveToCSV(content, folderName, fileName):
         ])
         with open(PATH, 'w', newline='', encoding='utf-8-sig') as csvFile:
             writer = csv.writer(csvFile)
-            writer.writerow(["전체 게시글 수", "전체 판매가", "전체 평균 판매가", "50만원 미만 게시글 수", "50만원 미만 전체 판매가", "평균 판매가", "50만원 이상 게시글 수", "50만원 이상 전체 판매가", "평균 판매가", "롱고니 게시글 수", "롱고니 전체 판매가", "평균 판매가", "인빗큐, 버팔로 게시글 수", "인빗큐, 버팔로 전체 판매가", "평균 판매가" ])
+            writer.writerow(["row", "row", "row", "row", "row", "row", "row", "row", "row", "row", "row", "row", "row", "row", "row" ])
         
             for row in datas:
                 writer.writerow(row)
@@ -128,7 +128,7 @@ def setCategory(MENU_ID, MainSession):
                 Article['onSale'],
                 True if ("롱고니" in Article['subject']) or ("S20" in Article['subject']) or ("VP2" in Article['subject']) else False,
                 True if "버팔로" in Article['subject'] else False,
-                True if ("인빗큐" in Article['subject']) or ("인비키트" in Article['subject']) else False,
+                True if ("인빗큐" in Article['subject']) or ("row" in Article['subject']) else False,
             ])
             count += 1
     

@@ -1,21 +1,58 @@
+# 다른사람 풀이 (쓰택이용)
+
 def solution(number, k):
-    collected = []
-    for idx, num in enumerate(number):
-        while len(collected) > 0 and collected[-1] < num and k > 0:
-            collected.pop()
+    stack = [number[0]]
+    for num in number[1:]:
+        while len(stack) > 0 and stack[-1] < num and k > 0:
             k -= 1
-            print(k, collected)
-        if k == 0:
-            collected += list(number[idx:])
-            break
-        collected.append(num)
-        print(collected)
-    print("밖", collected)
-    collected = collected[:-k] if k > 0 else collected
-    print(collected)
-    answer = ''.join(collected)
-    return answer
-print(solution("543712", 2))
+            stack.pop()
+        stack.append(num)
+    if k != 0:
+        stack = stack[:-k]
+    return ''.join(stack)
+
+
+# 스택 이용
+def solution(number, k):
+    num = list(number)
+    stack = [num[0]]
+    count = 0
+    
+    for i in range(1, len(num)):
+        if count == k:
+            stack = stack + num[i:]
+            break;
+
+        stack.append(num[i])
+        if stack[-1] > stack[-2]:
+            while(len(stack) != 1 and stack[-1] > stack[-2] and count < k):                
+                stack[-2], stack[-1] = stack[-1], stack[-2]
+                stack.pop()
+                count += 1
+
+    return "".join(stack[:len(num) -k])
+
+print(solution("1234445", 4))
+
+
+# def solution1(number, k):
+#     collected = []
+#     for idx, num in enumerate(number):
+#         while len(collected) > 0 and collected[-1] < num and k > 0:
+#             collected.pop()
+#             k -= 1
+#             print(k, collected)
+#         if k == 0:
+#             collected += list(number[idx:])
+#             break
+#         collected.append(num)
+#         print(collected)
+#     print("밖", collected)
+#     collected = collected[:-k] if k > 0 else collected
+#     print(collected)
+#     answer = ''.join(collected)
+#     return answer
+# print(solution1("543712", 2))
 
 # def solution(number, k):
 #     collected = []  # 숫자를 모아서 큰 수를 만들 때 쓰일 배열

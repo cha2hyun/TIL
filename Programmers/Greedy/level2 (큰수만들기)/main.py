@@ -1,4 +1,6 @@
-# 다른사람 풀이 (쓰택이용)
+
+
+다른사람 풀이 (쓰택이용)
 
 def solution(number, k):
     stack = [number[0]]
@@ -27,7 +29,7 @@ def solution(number, k):
         if stack[-1] > stack[-2]:
             while(len(stack) != 1 and stack[-1] > stack[-2] and count < k):                
                 stack[-2], stack[-1] = stack[-1], stack[-2]
-                stack.pop()
+                stack.pop() n
                 count += 1
 
     return "".join(stack[:len(num) -k])

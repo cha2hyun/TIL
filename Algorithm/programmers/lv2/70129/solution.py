@@ -11,9 +11,8 @@ def solution(s):
                 zero_cnt += 1
         delete_zero_cnt += zero_cnt
         s = len(s) - zero_cnt
-        s = format(s, 'b')
-    return [delete_zero_cnt, while_cnt]
-
+        s = format(s, "b")
+    return [while_cnt, delete_zero_cnt]
 
 
 solution("110010101001")

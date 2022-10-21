@@ -1,10 +1,18 @@
-def solution(triangle):
-    triangle = [[0] + line + [0] for line in triangle]
-    print(triangle)
-    for i in range(1, len(triangle)):
-        for j in range(1, i+2):
-            triangle[i][j] += max(triangle[i-1][j-1], triangle[i-1][j])    
-    return max(triangle[-1])
+def solution(operations):
+    import heapq
+    heap = []
 
-s = solution([[7], [3, 8], [8, 1, 0], [2, 7, 4, 4], [4, 5, 2, 6, 5]])
-print(s)
+    for i in range(len(operations)):
+        alphabet, number = operations[i].split(" ")
+        if alphabet == "I":
+            heapq.heappush(heap, int(number))
+        elif alphabet == "D" and heap:
+            if number == "1":
+                heap.remove(max(heap))
+            elif number == "-1":                 
+                heapq.heappop(heap)
+    
+    if heap:
+        return [ max(heap), heap[0] ]
+    else:
+        return [0,0]

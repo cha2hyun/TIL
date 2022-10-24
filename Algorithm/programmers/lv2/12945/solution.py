@@ -8,7 +8,7 @@ def solution(n):
         else:
             fabo[i] = (fabo[i - 1] + fabo[i - 2]) % 1234567
     print(fabo)
-    return fabo[n - 1]
+    return fabo[n]
 
 
 print(solution(5))

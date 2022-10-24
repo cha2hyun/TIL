@@ -5,9 +5,9 @@ def solution(n):
     cnt = format(n, "b").count("1")
     n += 1
     while True:
-        n += 1
         if format(n, "b").count("1") == cnt:
             return n
+        n += 1
 
 
 print(solution(5))

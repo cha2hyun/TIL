@@ -26,24 +26,20 @@ def solution(user_ids, banned_ids):
     return len(answer)
         
     
-        # print(i)
-    # for banned_id in banned_ids:
-    #     cnt = []
-    #     for user_id in user_ids:
-    #         if len(banned_id) == len(user_id):                
-    #             if(is_banned_id(banned_id,user_id)):
-    #                 cnt.append(user_id)
-    #     temp.append(cnt)
-    # print(temp)
 
-    # for id in temp:
-    
-    # answer = 1
-    # for t in temp:
-    #     answer *= t
-    # return answer
-        
 
-print(solution(["frodo", "fradi", "crodo", "abc123", "frodoc"], ["fr*d*", "abc1**"]))
-# print(solution(["brodo", "frodo", "fradi", "crodo", "abc123", "frodoc"], ["*rodo", "*rodo", "******"]))
-# print(minus("fr*d*","froo"))
+def lcm(a, b):
+    common = 1    
+    for i in range(1, min(a, b)):
+        if (a % i == 0) and (b % i == 0):
+            common = i
+    return int(common * (a / common) * (b / common))
+
+def solution(arr):
+    answer = arr[0]
+    if len(arr) == 1:
+        return answer
+    for i in arr:
+        answer = lcm(answer, i)
+
+    return answer

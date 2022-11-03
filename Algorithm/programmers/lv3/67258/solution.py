@@ -30,3 +30,4 @@ def solution(gems):
             
 
 print(solution(["DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA"]))
+

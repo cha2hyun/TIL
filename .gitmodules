@@ -1,0 +1,24 @@
+[submodule "Nomadcoders/airbnb-clone"]
+	path = Nomadcoders/airbnb-clone
+	url = https://github.com/cha2hyun/airbnb-clone.git
+[submodule "Nomadcoders/aribnb-native"]
+	path = Nomadcoders/aribnb-native
+	url = https://github.com/cha2hyun/aribnb-native.git
+[submodule "Nomadcoders/airbnb-api"]
+	path = Nomadcoders/airbnb-api
+	url = https://github.com/cha2hyun/airbnb-api.git
+[submodule "Nomadcoders/FokinWeather"]
+	path = Nomadcoders/FokinWeather
+	url = https://github.com/cha2hyun/FokinWeather.git
+[submodule "Nomadcoders/vanilla-redux"]
+	path = Nomadcoders/vanilla-redux
+	url = https://github.com/cha2hyun/vanilla-redux.git
+[submodule "Nomadcoders/react_movie_app"]
+	path = Nomadcoders/react_movie_app
+	url = https://github.com/cha2hyun/react_movie_app.git
+[submodule "Nomadcoders/TypeChain"]
+	path = Nomadcoders/TypeChain
+	url = https://github.com/cha2hyun/TypeChain.git
+[submodule "Nomadcoders/hi-nest"]
+	path = Nomadcoders/hi-nest
+	url = https://github.com/cha2hyun/hi-nest.git

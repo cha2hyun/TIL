@@ -34,4 +34,19 @@ def solution(A, B):
     return total
 
 
+# 1월 19일 복기
+
+
+def solution(A, B):
+    length = len(A)
+    answer = 0
+    for _ in range(length):
+        a_target = max(A)
+        b_target = min(B)
+        answer += a_target * b_target
+        A.remove(a_target)
+        B.remove(b_target)
+    return answer
+
+
 solution([1, 4, 2], [5, 4, 4])

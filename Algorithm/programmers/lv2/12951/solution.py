@@ -9,7 +9,6 @@
 #     return answer[:-1]
 
 
-
 # def solution(s):
 #     answer = ''
 #     flag = True
@@ -29,11 +28,37 @@
 
 
 def solution(s):
-    answer = ''
-    s = s.split(' ')
+    answer = ""
+    s = s.split(" ")
     for i in range(len(s)):
         s[i] = s[i].capitalize()
-    answer=' '.join(s)
+    answer = " ".join(s)
     return answer
 
-solution("3people unFollowed me")
+
+def solution(s):
+    answer = ""
+    s = s.split(" ")
+    for i in range(len(s)):
+        s[i] = s[i].capitalize()
+    answer = " ".join(s)
+    return answer
+
+
+# 1월 19일 복기로 다시 풀어봄
+
+
+def solution1(s):
+    answer = ""
+    arr = s.split(" ")
+    for word in arr:
+        answer += f"{word.capitalize()} "
+    return answer[:-1]
+
+
+def Jaden_Case(s):
+    # 함수를 완성하세요
+    return s.title()
+
+
+solution1("3people unFollowed me")
